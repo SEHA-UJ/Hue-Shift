@@ -107,3 +107,7 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+
+# 에셋스토어 에셋 (저작권) - 업로드 제외
+/[Aa]ssets/99_Resources/
+/[Aa]ssets/99_Resources.meta
