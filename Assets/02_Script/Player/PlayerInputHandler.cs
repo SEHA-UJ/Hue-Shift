@@ -11,7 +11,14 @@ public class PlayerInputHandler : MonoBehaviour
     private bool isAttackPressed;
     private bool isSwapPressed;
 
-    private bool IsBlocked { get { return !GameFlow.IsPlaying; } }
+    private bool isLocked;
+    
+    private bool IsBlocked { get { return isLocked || !GameFlow.IsPlaying; } }
+
+    public void SetLocked(bool locked)
+    {
+        isLocked = locked;
+    }
 
     public Vector2 MoveInput 
     { 
@@ -64,6 +71,7 @@ public class PlayerInputHandler : MonoBehaviour
     }
 
     // ---------- Controller가 부르는 함수 ---------- //
+
     public bool ConsumeJump()
     {
         bool pressed = isJumpPressed;
