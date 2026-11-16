@@ -34,12 +34,16 @@ public class PlayerState : MonoBehaviour, IDamageable
 
     void Start()
     {
-        
+        SetColor(startColor);
+        OnHpChanged?.Invoke(currentHp, maxHp);
     }
 
     void Update()
     {
+        if (isDead) return;
         
+        if (inputHandler.ConsumeSwap())
+            Swap();
     }
 
     // ===== 색 =====
@@ -77,8 +81,7 @@ public class PlayerState : MonoBehaviour, IDamageable
     private void Die()
     {
         isDead = true;
-        
- 
+        inputHandler.SetLocked(true);
         OnDied?.Invoke();
     }
 }
