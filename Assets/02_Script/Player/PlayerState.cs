@@ -24,6 +24,7 @@ public class PlayerState : MonoBehaviour, IDamageable
 
     public event Action<int, int> OnHpChanged;  // 현재 체력, 최대체력
     public event Action<ColorType> OnColorChanged;
+    public event Action OnDamaged;
     public event Action OnDied;
 
     void Awake()
@@ -73,6 +74,7 @@ public class PlayerState : MonoBehaviour, IDamageable
 
         currentHp = Mathf.Max(currentHp - amount, 0);
         OnHpChanged?.Invoke(currentHp, maxHp);
+        OnDamaged?.Invoke();
 
         if (currentHp == 0)
             Die();

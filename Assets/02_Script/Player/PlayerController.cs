@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -22,6 +23,8 @@ public class PlayerController : MonoBehaviour
 
     private bool isGrounded;
     public bool IsGrounded { get { return isGrounded; } }
+
+    public event Action OnJumped;
 
     void Awake()
     {
@@ -91,6 +94,7 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = velocity;
 
         rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+        OnJumped?.Invoke();
     }
 
 }
