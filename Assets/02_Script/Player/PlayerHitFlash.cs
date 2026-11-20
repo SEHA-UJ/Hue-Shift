@@ -1,16 +1,18 @@
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerState))]
 public class PlayerHitFlash : MonoBehaviour
 {
     [Header("참조")]
-    [SerializeField] private PlayerState state;
     [SerializeField] private Transform modelRoot;
 
     [Header("효과")]
     [SerializeField] private Color flashColor = Color.white;
     [SerializeField] private float flashIntensity = 2f;
     [SerializeField] private float flashDuration = 0.1f;
+    
+    private PlayerState state;
 
     private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
 
@@ -20,6 +22,7 @@ public class PlayerHitFlash : MonoBehaviour
 
     void Awake()
     {
+        state = GetComponent<PlayerState>();
         renderers = modelRoot.GetComponentsInChildren<Renderer>();
         propertyBlock = new MaterialPropertyBlock();
     }

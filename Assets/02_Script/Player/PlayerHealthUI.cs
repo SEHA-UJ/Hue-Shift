@@ -1,16 +1,23 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(PlayerState))]
 public class PlayerHealthUI : MonoBehaviour
 {
     [Header("참조")]
-    [SerializeField] private PlayerState state;
     [SerializeField] private Image[] hearts;
 
     [Header("색")]
     [SerializeField] private Color fullColor = Color.white;
     [SerializeField] private Color emptyColor = new Color(0.25f, 0.25f, 0.25f, 0.6f);
 
+    private PlayerState state;
+
+    void Awake()
+    {
+        state = GetComponent<PlayerState>();
+    }
+    
     void OnEnable()
     {
         state.OnHpChanged += UpdateHearths;

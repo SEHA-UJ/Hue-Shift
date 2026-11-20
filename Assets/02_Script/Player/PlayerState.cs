@@ -1,15 +1,17 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerInputHandler))]
 public class PlayerState : MonoBehaviour, IDamageable
 {
     [Header("참조")]
-    [SerializeField] private PlayerInputHandler inputHandler;
     [SerializeField] private ColorAura aura;
     
     [Header("상태")]
     [SerializeField] private int maxHp = 5;
     [SerializeField] private ColorType startColor = ColorType.Red;
+
+    private PlayerInputHandler inputHandler;
 
     private int currentHp;
     private ColorType currentColor;
@@ -17,9 +19,11 @@ public class PlayerState : MonoBehaviour, IDamageable
 
     #region [ Public Properties ]
     public int MaxHp { get { return maxHp; } }
-    public int Current { get { return currentHp; } }
+    public int CurrentHp { get { return currentHp; } }
     public ColorType CurrentColor { get { return currentColor; } }
     public bool IsDead { get { return isDead; } }
+
+    public static PlayerState Current { get; private set; }
     #endregion
 
     public event Action<int, int> OnHpChanged;  // 현재 체력, 최대체력
@@ -29,8 +33,16 @@ public class PlayerState : MonoBehaviour, IDamageable
 
     void Awake()
     {
+        inputHandler = GetComponent<PlayerInputHandler>();
+        Current = this;
         currentHp = maxHp;
         currentColor = startColor;
+    }
+
+    void OnDestroy()
+    {
+        if (Current == this)
+            Current = null;
     }
 
     void Start()
