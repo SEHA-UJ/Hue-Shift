@@ -1,12 +1,12 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerInputHandler))]
+[RequireComponent(typeof(PlayerController))]
+[RequireComponent(typeof(PlayerState))]
 public class PlayerAttack : MonoBehaviour
 {
     [Header("참조")]
-    [SerializeField] private PlayerInputHandler inputHandler;
-    [SerializeField] private PlayerController controller;
-    [SerializeField] private PlayerState state;
     [SerializeField] private Transform shotPoint;
 
     [Header("투사체")]
@@ -16,9 +16,20 @@ public class PlayerAttack : MonoBehaviour
     [Header("공격 조건")]
     [SerializeField] private float attackCooldown = 1.5f;
 
+    private PlayerController controller;
+    private PlayerState state;
+    private PlayerInputHandler inputHandler;
+    
     private float lastAttackTime = -999f;
 
     public event Action OnAttacked;
+
+    void Awake()
+    {
+        inputHandler = GetComponent<PlayerInputHandler>();
+        controller = GetComponent<PlayerController>();
+        state = GetComponent<PlayerState>();
+    }
 
     void Update()
     {

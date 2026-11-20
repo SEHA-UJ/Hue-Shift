@@ -1,11 +1,9 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerInputHandler))]
 public class PlayerController : MonoBehaviour
 {
-    [Header("참조")]
-    [SerializeField] private PlayerInputHandler inputHandler;
-
     [Header("이동 및 시점")]
     [SerializeField] private float moveSpeed = 8f;
     [SerializeField] private float lookSeneitivity = 0.2f; // 감도
@@ -15,6 +13,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float checkeRadius = 0.2f;
     [SerializeField] private Transform checkGround;
     [SerializeField] private LayerMask groundLayer;
+
+    private PlayerInputHandler inputHandler;
 
     private Rigidbody rb;
 
@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
+        inputHandler = GetComponent<PlayerInputHandler>();
         rb = GetComponent<Rigidbody>();
         yaw = transform.eulerAngles.y;
     }

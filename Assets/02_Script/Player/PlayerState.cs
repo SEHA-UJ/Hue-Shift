@@ -1,15 +1,17 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerInputHandler))]
 public class PlayerState : MonoBehaviour, IDamageable
 {
     [Header("참조")]
-    [SerializeField] private PlayerInputHandler inputHandler;
     [SerializeField] private ColorAura aura;
     
     [Header("상태")]
     [SerializeField] private int maxHp = 5;
     [SerializeField] private ColorType startColor = ColorType.Red;
+
+    private PlayerInputHandler inputHandler;
 
     private int currentHp;
     private ColorType currentColor;
@@ -31,6 +33,7 @@ public class PlayerState : MonoBehaviour, IDamageable
 
     void Awake()
     {
+        inputHandler = GetComponent<PlayerInputHandler>();
         Current = this;
         currentHp = maxHp;
         currentColor = startColor;

@@ -1,20 +1,23 @@
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerInputHandler))]
+[RequireComponent(typeof(PlayerController))]
+[RequireComponent(typeof(PlayerState))]
+[RequireComponent(typeof(PlayerAttack))]
 public class PlayerAnimation : MonoBehaviour
 {
-    [Header("참조")]
-    [SerializeField] private PlayerInputHandler inputHandler;
-    [SerializeField] private PlayerController controller;
-    [SerializeField] private PlayerState state;
-    [SerializeField] private PlayerAttack attack;
-    
     [Header("이동 블렌드")]
     [SerializeField] private float moveDampTime = 0.1f;
     [SerializeField] private float moveThreshold = 0.1f; // 입력 크기가 이보다 크면 움직이는 중
     
-    private bool isDead;
-    
+    private PlayerInputHandler inputHandler;
+    private PlayerController controller;
+    private PlayerState state;
+    private PlayerAttack attack;
+
     private Animator anim;
+
+    private bool isDead;
 
     // 파라미터 이름
     private static readonly int MoveXHash = Animator.StringToHash("MoveX");
@@ -28,6 +31,10 @@ public class PlayerAnimation : MonoBehaviour
 
     void Awake()
     {
+        inputHandler = GetComponent<PlayerInputHandler>();
+        controller = GetComponent<PlayerController>();
+        state = GetComponent<PlayerState>();
+        attack = GetComponent<PlayerAttack>();
         anim = GetComponent<Animator>();
     }
 
