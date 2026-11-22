@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -22,7 +21,7 @@ public class EnemyController : MonoBehaviour
     private CapsuleCollider bodyColl;
 
     private Transform target;
-    private EnemyAction currentAction = EnemyAction.Idel;
+    private EnemyAction currentAction = EnemyAction.Idle;
     private Coroutine actionRoutine;
 
     public EnemyAction CurrentAction { get { return currentAction; } }
@@ -50,12 +49,18 @@ public class EnemyController : MonoBehaviour
         if (PlayerState.Current != null)
             target = PlayerState.Current.transform;
 
-        ChangedAction(EnemyAction.Idel);
+        Debug.Log($"[{name}] NavMesh 위: {agent.isOnNavMesh} / 타겟 찾음: {target != null}", this);
+        if (target != null)
+        {
+            Debug.Log($"[{name}] 플레이어까지 거리: {Vector3.Distance(transform.position, target.position):F1} (감지 거리 {detectRange})", this);
+        }
+        
+        ChangeAction(EnemyAction.Idle);
     }
 
-    private void HandleDied() => ChangedAction(EnemyAction.Die);
+    private void HandleDied() => ChangeAction(EnemyAction.Die);
 
-    private void ChangedAction(EnemyAction newAction)
+    private void ChangeAction(EnemyAction newAction)
     {
         if (currentAction == EnemyAction.Die) return;
 
@@ -69,7 +74,7 @@ public class EnemyController : MonoBehaviour
 
         switch (currentAction)
         {
-            case EnemyAction.Idel:
+            case EnemyAction.Idle:
                 actionRoutine = StartCoroutine(IdleRoutine());
                 break;
             case EnemyAction.Chase:
@@ -89,7 +94,7 @@ public class EnemyController : MonoBehaviour
         {
             if (IsTargetInRange(detectRange))
             {
-                ChangedAction(EnemyAction.Chase);
+                ChangeAction(EnemyAction.Chase);
                 yield break; // 새 루틴 시작으로 해당 루틴을 끝내기
             }
 
@@ -103,7 +108,7 @@ public class EnemyController : MonoBehaviour
         {
             if (!IsTargetInRange(loseRange))
             {
-                ChangedAction(EnemyAction.Idel);
+                ChangeAction(EnemyAction.Idle);
                 yield break;
             }
 
