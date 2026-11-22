@@ -12,7 +12,7 @@ public class EnemyAttack : MonoBehaviour
     
     private IDamageable target;
 
-    private float lastAttackTiem = -999f;
+    private float lastAttackTime = -999f;
 
     public event Action OnAttacked;
 
@@ -34,11 +34,10 @@ public class EnemyAttack : MonoBehaviour
     {
         if (target == null) return;
         if (state.IsDead || !GameFlow.IsPlaying) return;
-        if (Time.time - lastAttackTiem < attackCooldown) return;
+        if (Time.time - lastAttackTime < attackCooldown) return;
 
         target.TakeDamage(damage, state.MyColor);
-        Debug.Log("몬스터가 플레이어를 공격!");
-        lastAttackTiem = Time.time;
+        lastAttackTime = Time.time;
         OnAttacked?.Invoke();
     }
 }

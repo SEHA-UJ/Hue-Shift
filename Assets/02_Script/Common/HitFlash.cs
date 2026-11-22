@@ -1,8 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerState))]
-public class PlayerHitFlash : MonoBehaviour
+public class HitFlash : MonoBehaviour
 {
     [Header("참조")]
     [SerializeField] private Transform modelRoot;
@@ -11,31 +10,26 @@ public class PlayerHitFlash : MonoBehaviour
     [SerializeField] private Color flashColor = Color.white;
     [SerializeField] private float flashIntensity = 2f;
     [SerializeField] private float flashDuration = 0.1f;
-    
-    private PlayerState state;
 
     private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
 
+    private IDamageable damageable;
     private Renderer[] renderers;
     private MaterialPropertyBlock propertyBlock;
     private Coroutine flashRoutine;
 
     void Awake()
-    {
-        state = GetComponent<PlayerState>();
+    {   
+        damageable = GetComponent<IDamageable>();
+        if (damageable == null)
+            Debug.LogError("HitFlash: 같은 오브젝트에 IDamageable(PlayerState, EnemyState 등)이 없습니다.", this);
+
         renderers = modelRoot.GetComponentsInChildren<Renderer>();
         propertyBlock = new MaterialPropertyBlock();
     }
 
-    void OnEnable()
-    {
-        state.OnDamaged += HandleDamaged;
-    }
-
-    void OnDisable()
-    {
-        state.OnDamaged -= HandleDamaged;
-    }
+    void OnEnable() => damageable.OnDamaged += HandleDamaged;
+    void OnDisable() => damageable.OnDamaged -= HandleDamaged;
 
     private void HandleDamaged()
     {

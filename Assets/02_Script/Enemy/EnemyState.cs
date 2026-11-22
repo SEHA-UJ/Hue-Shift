@@ -7,8 +7,8 @@ public class EnemyState : MonoBehaviour, IDamageable
     [SerializeField] private int maxHp = 3;
 
     [Header("상태")]
-    [SerializeField] private ColorType myColor = ColorType.Red;
-
+    [SerializeField] private ColorType myColor;
+    
     private int currentHp;
     private bool isDead;
 
