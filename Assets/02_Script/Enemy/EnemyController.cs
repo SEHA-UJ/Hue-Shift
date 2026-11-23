@@ -7,10 +7,13 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyController : MonoBehaviour
 {
+    [Header("참조")]
+    [SerializeField] private EnemyAttack attack;
+    
     [Header("감지 거리")]
     [SerializeField] private float detectRange = 5f; // 공격 인식 거리
     [SerializeField] private float loseRange = 10f; // 추적 포기 거리
-
+    
     [Header("사망")]
     [SerializeField] private float dieDuration = 1f;
     [SerializeField] private GameObject deathEffect; 
@@ -25,6 +28,8 @@ public class EnemyController : MonoBehaviour
     private Coroutine actionRoutine;
 
     public EnemyAction CurrentAction { get { return currentAction; } }
+
+    public event Action<EnemyAction> OnActionChanged;
 
     void Awake()
     {
@@ -48,12 +53,6 @@ public class EnemyController : MonoBehaviour
     {
         if (PlayerState.Current != null)
             target = PlayerState.Current.transform;
-
-        Debug.Log($"[{name}] NavMesh 위: {agent.isOnNavMesh} / 타겟 찾음: {target != null}", this);
-        if (target != null)
-        {
-            Debug.Log($"[{name}] 플레이어까지 거리: {Vector3.Distance(transform.position, target.position):F1} (감지 거리 {detectRange})", this);
-        }
         
         ChangeAction(EnemyAction.Idle);
     }
@@ -71,6 +70,7 @@ public class EnemyController : MonoBehaviour
         }
 
         currentAction = newAction;
+        OnActionChanged?.Invoke(newAction);
 
         switch (currentAction)
         {
@@ -79,6 +79,9 @@ public class EnemyController : MonoBehaviour
                 break;
             case EnemyAction.Chase:
                 actionRoutine = StartCoroutine(ChaseRoutine());
+                break;
+            case EnemyAction.Attack:
+                actionRoutine = StartCoroutine(AttackRoutine());
                 break;
             case EnemyAction.Die:
                 actionRoutine = StartCoroutine(DieRoutine());
@@ -115,6 +118,13 @@ public class EnemyController : MonoBehaviour
             // if - 현재 플레이 중이라면 추적, else - 컷신, 일시정지 시 이동 멈춤
             if (GameFlow.IsPlaying)
             {
+                // 사거리 안 + 쿨다운 끝 → 공격으로
+                if (attack.CanAttack)
+                {
+                    ChangeAction(EnemyAction.Attack);
+                    yield break;
+                }
+                
                 agent.isStopped = false;
                 agent.SetDestination(target.position);
             }
@@ -125,6 +135,16 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    private IEnumerator AttackRoutine()
+    {
+        agent.isStopped = true;
+        agent.velocity = Vector3.zero;
+
+        yield return attack.PerformAttack();
+
+        ChangeAction(EnemyAction.Chase);
+    }
+    
     private IEnumerator DieRoutine()
     {
         agent.enabled = false;

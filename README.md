@@ -62,3 +62,38 @@
 | 대상 | 설정 | 이유 |
 |---|---|---|
 | 데몬·해골 머티리얼 | Emission **체크**, 색 검정 | 피격 시 흰색 번쩍임 (HitFlash) |
+
+### Mixamo 애니메이션
+일부 애니메이션은 [Mixamo](https://www.mixamo.com)에서 받았습니다. (Adobe 계정 필요, 무료)
+Mixamo는 애니메이션별 고정 링크가 없으므로, 아래 이름으로 검색해 다운로드해 주세요.
+
+| 사용처 | Animator 상태 | Mixamo 검색 이름 | In Place |
+|---|---|---|---|
+| 데몬/해골 | Idle | idle | - |
+| 데몬/해골 | Chase | run | ✅ 체크 |
+| 데몬/해골 | Attack | attack | - |
+| 데몬/해골 | Die | die | - |
+
+**다운로드 옵션**
+
+| 항목 | 값 |
+|---|---|
+| Format | FBX for Unity (.fbx) |
+| Skin | Without Skin |
+| Frames per Second | 30 |
+| In Place | 이동 애니메이션만 체크 (이동은 NavMeshAgent가 하므로 제자리 재생) |
+
+**저장 위치·이름**: `Assets/99_Resources/Mixamo/[몬스터명]/` 아래에 **표의 Animator 상태 이름과 같은 파일명**으로 저장합니다. (예: `Demon/Chase.fbx`)
+
+**임포트 후 설정 (필수)**
+
+| 대상 | 위치 (Inspector) | 설정 | 이유 |
+|---|---|---|---|
+| 몬스터 모델 FBX | Rig > Animation Type | **Humanoid** | Mixamo 애니메이션을 다른 모델에 입히려면(리타게팅) 양쪽 모두 Humanoid여야 함 |
+| Mixamo 애니메이션 FBX 전부 | Rig > Animation Type | **Humanoid** (기본값 Generic에서 변경) | 위와 같음 |
+| Mixamo 애니메이션 FBX 전부 | Rig > Avatar Definition | Create From This Model | |
+| Idle, Chase 클립 | Animation > Loop Time | **체크** | 반복 재생 |
+| Attack, Die 클립 | Animation > Loop Time | **해제** | 1회 재생 |
+
+> 새로 다운로드한 Mixamo 파일은 파일 ID가 달라서, Animator의 각 상태(Idle, Chase, Attack, Die)에
+> 클립을 **직접 다시 연결**해야 합니다. 상태 이름과 파일 이름을 같게 저장해 두면 찾기 쉽습니다.

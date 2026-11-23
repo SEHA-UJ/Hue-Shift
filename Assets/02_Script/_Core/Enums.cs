@@ -11,6 +11,6 @@ public enum GameState
 
 public enum EnemyAction
 {
-    Idle, Chase, Die
+    Idle, Chase, Attack, Die
 }
 
