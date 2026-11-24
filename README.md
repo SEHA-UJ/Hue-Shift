@@ -69,10 +69,10 @@ Mixamo는 애니메이션별 고정 링크가 없으므로, 아래 이름으로 
 
 | 사용처 | Animator 상태 | Mixamo 검색 이름 | In Place |
 |---|---|---|---|
-| 데몬/해골 | Idle | idle | - |
-| 데몬/해골 | Chase | run | ✅ 체크 |
-| 데몬/해골 | Attack | attack | - |
-| 데몬/해골 | Die | die | - |
+| 데몬/해골 | Idle | Breathing Idle | - |
+| 데몬/해골 | Chase | Unarmed Run Forward | ✅ 체크 |
+| 데몬/해골 | Attack | Standing Melee Attack | - |
+| 데몬/해골 | Die | Sword And Shield Death | - |
 
 **다운로드 옵션**
 

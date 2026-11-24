@@ -47,11 +47,9 @@ public class EnemyAttack : MonoBehaviour
     public IEnumerator PerformAttack()
     {
         lastAttackTime = Time.time;
-        Debug.Log($"[{name}] 공격 시작 {Time.time:F2}");   // 임시
 
         yield return GameFlow.Wait(hitDelay);
         
-        Debug.Log($"[{name}] 판정 {Time.time:F2}");
         if (target != null && !state.IsDead)
             target.TakeDamage(damage, state.MyColor);
 
