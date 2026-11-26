@@ -4,9 +4,14 @@ public enum ColorType
     Red, Blue, Green
 }
 
-public enum GameState
+public enum GamePhase
 {
-    Playing, Pause, GameOver, GameClear, Cutscene
+    Lobby, Stage, Loading
+}
+
+public enum StageState
+{
+    Playing, Pause, Cutscene, GameOver, StageClear, GameClear
 }
 
 public enum EnemyAction

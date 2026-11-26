@@ -1,46 +1,90 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : SingletonCore<GameManager>
 {
-    [Header("게임오버")]
-    [SerializeField] private float gameOverDelay = 2f;
-
-    private bool isGameOverPending; // 게임오버 판정 중복 반지용
+    [Header("씬 전환")]
+    [SerializeField] private ScreenFade fadePrefab;
     
-    public GameState CurrentState { get; private set; } = GameState.Playing;
+    private ScreenFade fade;
+    private bool isLoading;
+    private GamePhase pendingPhase;
+    
+    public GamePhase CurrentPhase { get; private set; } = GamePhase.Lobby;
 
-    public event Action<GameState> OnStateChanged;
+    public event Action <GamePhase> OnPhaseChanged;
 
-    public void ChangeState(GameState newState)
+    protected override void Awake()
     {
-        if (CurrentState == newState) return;
+        base.Awake();
 
-        CurrentState = newState;
-        Debug.Log($"[GameManager] 상태 변경: {newState}"); 
-        OnStateChanged?.Invoke(newState);
+        if (Instance != this) return;
+
+        if (fadePrefab != null)
+            fade = Instantiate(fadePrefab, transform);
+    }
+    
+    // 각 씬의 매니저가 시작할 때 해당 씬이 무엇인지 알림.
+    public void SetPhase(GamePhase newPhase)
+    {
+        if (isLoading)
+        {
+            pendingPhase = newPhase;
+            return;
+        }
+        
+        ApplyPhase(newPhase);
     }
 
-    public void GameOver()
+    // 실제로 Phase를 바꾸는 곳 (페이드인아웃 중에 씬 변경으로 인한 플레이어/몹/전투 타이머 실행 방지를 위함)
+    private void ApplyPhase(GamePhase newPhase)
     {
-        if (isGameOverPending || CurrentState == GameState.GameOver) return;
+        if (CurrentPhase == newPhase ) return;
 
-        StartCoroutine(GameOverRoutine());
+        CurrentPhase = newPhase;
+        Debug.Log($"[GameManager] Phase 변경: {newPhase}");
+        OnPhaseChanged?.Invoke(newPhase);
     }
 
-    private IEnumerator GameOverRoutine()
+    public void LoadScene(string sceneName)
     {
-        isGameOverPending = true;
+        if (isLoading) return;
 
-        yield return new WaitForSeconds(gameOverDelay);
+        // 오타 또는 빌드 목록 누락일 경우
+        if (!Application.CanStreamedLevelBeLoaded(sceneName))
+        {
+            Debug.LogError($"GameManager: '{sceneName}' 씬을 로드할 수 없습니다. 이름과 Build Profiles 씬 목록을 확인하세요.", this);
+            return;
+        }
 
-        ChangeState(GameState.GameOver);
-        isGameOverPending = false;
+        StartCoroutine(LoadSceneRoutine(sceneName));
     }
 
-    public void StageClear()
+    private IEnumerator LoadSceneRoutine(string sceneName)
     {
-        ChangeState(GameState.GameClear);
+        isLoading = true;
+
+        // 새 씬이 Phase를 안 알려주면 이전 Phase를 그대로 쓴다
+        pendingPhase = CurrentPhase;
+
+        // 전환하는 동안 입력·몹·전투 타이머를 멈춘다 (GameFlow.IsPlaying이 false가 됨)
+        ApplyPhase(GamePhase.Loading);
+
+        if (fade != null)
+            yield return fade.FadeOut();
+
+        Time.timeScale = 1f;
+
+        AsyncOperation loading = SceneManager.LoadSceneAsync(sceneName);
+        while (!loading.isDone)
+            yield return null;
+
+        if (fade != null)
+            yield return fade.FadeIn();
+
+        isLoading = false;
+        ApplyPhase(pendingPhase);
     }
 }

@@ -7,10 +7,13 @@ public static class GameFlow
     {
         get
         {
-            if (GameManager.Instance == null) 
+            if (GameManager.Instance != null && GameManager.Instance.CurrentPhase == GamePhase.Loading) 
+                return false;
+
+            if (StageManager.Current == null)
                 return true;
 
-            return GameManager.Instance.CurrentState == GameState.Playing;
+            return StageManager.Current.CurrentState == StageState.Playing;
         }
     }
 

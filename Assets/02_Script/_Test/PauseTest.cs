@@ -12,12 +12,10 @@ public class PauseTest : MonoBehaviour
 
         if (Keyboard.current.pKey.wasPressedThisFrame)
         {
-            if (GameManager.Instance.CurrentState == GameState.Playing)
-                GameManager.Instance.ChangeState(GameState.Pause);
+            if (StageManager.Current.CurrentState == StageState.Playing)
+                StageManager.Current.ChangeState(StageState.Pause);
             else
-                GameManager.Instance.ChangeState(GameState.Playing);
-
-            Debug.Log($"상태: {GameManager.Instance.CurrentState}");
+                StageManager.Current.ChangeState(StageState.Playing);
         }
     }
 }
