@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc96675ecb2f0d64c9389b2076976b78, type: 3}
+  m_Name: Scene Catalog
+  m_EditorClassIdentifier: Assembly-CSharp::SceneCatalog
+  lobbyScene: 
+  stageScenes:
+  - TestScene
+  - TestScene_2
+  - TestScene_3

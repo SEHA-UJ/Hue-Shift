@@ -386,6 +386,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c44eace9acb5da49a1cb50a79d76586, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  fadePrefab: {fileID: -362119217097188411, guid: 22e3813e238b3f142a38c18f603f8c71, type: 3}
 --- !u!4 &483624143
 Transform:
   m_ObjectHideFlags: 0
@@ -2031,7 +2032,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2110150787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2044,6 +2045,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20972c9e349a8a843a290f5547679828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StageManager
+  Catalog: {fileID: 11400000, guid: 660e299ec1988364e9e6f1d440aec2fc, type: 2}
   player: {fileID: 1578237952}
   key: {fileID: 1401126887}
   goal: {fileID: 706575880}

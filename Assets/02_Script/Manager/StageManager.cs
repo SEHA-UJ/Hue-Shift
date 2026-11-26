@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class StageManager : MonoBehaviour
 {
+    [Header("씬 진행")]
+    [SerializeField] private SceneCatalog Catalog;
+    
     [Header("씬 오브젝트")]
     [SerializeField] private PlayerState player;
     [SerializeField] private KeyItem key;
@@ -97,5 +100,40 @@ public class StageManager : MonoBehaviour
         }
 
         ChangeState(StageState.StageClear);
+        NextStage();
+    }
+
+    private void NextStage()
+    {
+        string nextScene;
+
+        if (Catalog.TryGetNextStage(gameObject.scene.name, out nextScene))
+        {
+            RequestLoad(nextScene);
+            return;
+        }
+    }
+
+    [ContextMenu("테스트: 재시도")]
+    public void Retry()
+    {
+        RequestLoad(gameObject.scene.name);
+    }
+
+    [ContextMenu("테스트: 로비로")]
+    public void GoToLobby()
+    {
+        RequestLoad(Catalog.LobbyScene);
+    }
+
+    private void RequestLoad(string sceneName)
+    {
+        if (GameManager.Instance == null)
+        {
+            Debug.LogWarning("StageManager: 씬에 GameManager가 없어서 씬을 넘길 수 없습니다.", this);
+            return;
+        }
+
+        GameManager.Instance.LoadScene(sceneName);
     }
 }
