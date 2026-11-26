@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 public class StageManager : MonoBehaviour
@@ -7,7 +9,33 @@ public class StageManager : MonoBehaviour
     [SerializeField] private KeyItem key;
     [SerializeField] private GoalPoint goal;
 
+    [Header("게임오버")]
+    [SerializeField] private float gameOverDelay = 2f;
+
     private bool hasKey;
+
+    public StageState CurrentState { get; private set; } = StageState.Playing;
+
+    public event Action<StageState> OnStateChanged;
+
+    public static StageManager Current { get; private set; }
+
+    void Awake()
+    {
+        Current = this;
+    }
+
+    void OnDestroy()
+    {
+        if (Current == this)
+            Current = null;
+    }
+
+    void Start()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.SetPhase(GamePhase.Stage);
+    }
 
     void OnEnable()
     {
@@ -33,15 +61,24 @@ public class StageManager : MonoBehaviour
             goal.OnPlayerEntered -= HandleGoalEntered;
     }
 
+    public void ChangeState(StageState newState)
+    {
+        if (CurrentState == newState) return;
+
+        CurrentState = newState;
+        Debug.Log($"[StageManager] 상태 변경: {newState}");
+        OnStateChanged?.Invoke(newState);
+    }
+
     private void HandlePlayerDied()
     {
-        if (GameManager.Instance == null)
-        {
-            Debug.LogWarning("StageManager: 씬에 GameManager가 없습니다.", this);
-            return;
-        }
+        StartCoroutine(GameOverRoutine());
+    }
 
-        GameManager.Instance.GameOver();
+    private IEnumerator GameOverRoutine()
+    {
+        yield return new WaitForSeconds(gameOverDelay);
+        ChangeState(StageState.GameOver);
     }
 
     private void HandleKeyCollected()
@@ -59,12 +96,6 @@ public class StageManager : MonoBehaviour
             return;
         }
 
-        if (GameManager.Instance == null)
-        {
-            Debug.LogWarning("StageManager: 씬에 GameManager가 없습니다.", this);
-            return;
-        }
-
-        GameManager.Instance.StageClear();
+        ChangeState(StageState.StageClear);
     }
 }

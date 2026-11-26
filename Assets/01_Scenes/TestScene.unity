@@ -386,7 +386,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c44eace9acb5da49a1cb50a79d76586, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  gameOverDelay: 2
 --- !u!4 &483624143
 Transform:
   m_ObjectHideFlags: 0
@@ -2032,7 +2031,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2110150787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2048,6 +2047,7 @@ MonoBehaviour:
   player: {fileID: 1578237952}
   key: {fileID: 1401126887}
   goal: {fileID: 706575880}
+  gameOverDelay: 2
 --- !u!4 &2110150788
 Transform:
   m_ObjectHideFlags: 0

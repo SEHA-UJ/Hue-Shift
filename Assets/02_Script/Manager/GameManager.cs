@@ -1,46 +1,18 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 public class GameManager : SingletonCore<GameManager>
 {
-    [Header("게임오버")]
-    [SerializeField] private float gameOverDelay = 2f;
+    public GamePhase CurrentPhase { get; private set; } = GamePhase.Lobby;
 
-    private bool isGameOverPending; // 게임오버 판정 중복 반지용
-    
-    public GameState CurrentState { get; private set; } = GameState.Playing;
+    public event Action <GamePhase> OnPhaseChanged;
 
-    public event Action<GameState> OnStateChanged;
-
-    public void ChangeState(GameState newState)
+    public void SetPhase(GamePhase newPhase)
     {
-        if (CurrentState == newState) return;
+        if (CurrentPhase == newPhase ) return;
 
-        CurrentState = newState;
-        Debug.Log($"[GameManager] 상태 변경: {newState}"); 
-        OnStateChanged?.Invoke(newState);
-    }
-
-    public void GameOver()
-    {
-        if (isGameOverPending || CurrentState == GameState.GameOver) return;
-
-        StartCoroutine(GameOverRoutine());
-    }
-
-    private IEnumerator GameOverRoutine()
-    {
-        isGameOverPending = true;
-
-        yield return new WaitForSeconds(gameOverDelay);
-
-        ChangeState(GameState.GameOver);
-        isGameOverPending = false;
-    }
-
-    public void StageClear()
-    {
-        ChangeState(GameState.GameClear);
+        CurrentPhase = newPhase;
+        Debug.Log($"[GameManager] Phase 변경: {newPhase}");
+        OnPhaseChanged?.Invoke(newPhase);
     }
 }
