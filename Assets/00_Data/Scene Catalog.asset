@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc96675ecb2f0d64c9389b2076976b78, type: 3}
   m_Name: Scene Catalog
   m_EditorClassIdentifier: Assembly-CSharp::SceneCatalog
-  lobbyScene: 
+  lobbyScene:
+    sceneAsset: {fileID: 102900000, guid: 919d690f506a0484ca5b6db1e0d59bd1, type: 3}
+    sceneName: 00. Lobby
   stageScenes:
-  - TestScene
-  - TestScene_2
-  - TestScene_3
+  - sceneAsset: {fileID: 102900000, guid: 2c52cb78af116a143bb9a39aca888eb5, type: 3}
+    sceneName: TestScene
+  - sceneAsset: {fileID: 102900000, guid: 17089b69dda21254181a25b1403fabc8, type: 3}
+    sceneName: TestScene_2
